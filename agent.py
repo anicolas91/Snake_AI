@@ -115,60 +115,60 @@ class Agent:
 
         return final_move
 
-    # global fcn
-    def train():
-        # initialize stuff
-        plot_scores = [] #list to keep track of scores and plot
-        plot_mean_scores = []
-        total_score = 0
-        record = 0
-        agent = Agent()
-        game = SnakeGameAI()
+# global fcn
+def train():
+    # initialize stuff
+    plot_scores = [] #list to keep track of scores and plot
+    plot_mean_scores = []
+    total_score = 0
+    record = 0
+    agent = Agent()
+    game = SnakeGameAI()
 
-        # start training loop
-        while True:
-            # get the old (current) state
-            state_old = agent.get_state(game)
+    # start training loop
+    while True:
+        # get the old (current) state
+        state_old = agent.get_state(game)
 
-            # get the move/action based on current state
-            final_move = agent.get_action(state_old)
+        # get the move/action based on current state
+        final_move = agent.get_action(state_old)
 
-            # perform move and get new state
-            reward, game_over, score = game.play_step(final_move)
-            state_new = agent.get_state(game)
+        # perform move and get new state
+        reward, game_over, score = game.play_step(final_move)
+        state_new = agent.get_state(game)
 
-            # train the short term memory
-            agent.train_short_memory(state_old,final_move,reward,state_new,game_over)
+        # train the short term memory
+        agent.train_short_memory(state_old,final_move,reward,state_new,game_over)
 
-            # remember on memory
-            agent.remember(state_old,final_move,reward,state_new,game_over)
+        # remember on memory
+        agent.remember(state_old,final_move,reward,state_new,game_over)
 
-            # if game over
-            if game_over:
-                # train the long memory (experience replay)
-                game.reset()
-                agent.n_games += 1
-                agent.train_long_memory()
+        # if game over
+        if game_over:
+            # train the long memory (experience replay)
+            game.reset()
+            agent.n_games += 1
+            agent.train_long_memory()
 
-                if score > record:
-                    record = score
-                    # TODO: save the model
-                    agent.model.save()
+            if score > record:
+                record = score
+                # TODO: save the model
+                agent.model.save()
 
-                # print info
-                print('Game',agent.n_games,'Score',score,'Record:',record)
+            # print info
+            print('Game',agent.n_games,'Score',score,'Record:',record)
 
-                # plot
-                plot_scores.append(score)
-                total_score += score
-                mean_score = total_score / agent.n_games
-                plot_mean_scores.append(mean_score)
-                plot(plot_scores,plot_mean_scores)
+            # plot
+            plot_scores.append(score)
+            total_score += score
+            mean_score = total_score / agent.n_games
+            plot_mean_scores.append(mean_score)
+            plot(plot_scores,plot_mean_scores)
 
 
 
-    if __name__ == '__main__':
-        train()
+if __name__ == '__main__':
+    train()
 
 
 
