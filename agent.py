@@ -18,8 +18,8 @@ class Agent:
         self.epsilon = 0 # parameter to control the randomness
         self.gamma = 0.9 # discount rate bellman eqn (btw 0 and 1, less than 1)
         self.memory = deque(maxlen=MAX_MEMORY) # if we exceed memory it will remove elements from the left
-        self.model = Linear_Qnet(11,256,3) # state size, hidden layers, and output
-        self.trainer = QTrainer(model,lr = LR, gamma = self.gamma)
+        self.model  = Linear_Qnet(11,256,3) # state size, hidden layers, and output
+        self.trainer = QTrainer(self.model,lr = LR, gamma = self.gamma)
     
     # for training we create a state --> action --> predict --> compare
     def get_state(self,game):
@@ -99,7 +99,7 @@ class Agent:
 
     def get_action(self,state):
         # random moves: tradeoff between exploration and exploitation
-        self.epsilon = 80 - self.ngames # as no of game increase eps decreases (reduces randomness)
+        self.epsilon = 80 - self.n_games # as no of game increase eps decreases (reduces randomness)
         final_move = [0,0,0]
 
         if random.randint(0,200) < self.epsilon: # the smaller eps gets, the less random moves we do
